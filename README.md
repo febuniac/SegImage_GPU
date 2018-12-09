@@ -37,7 +37,14 @@ After comopiling either ways. You are ready to use it!
 Using : 
 ./NAME iumput_image.pgm Output_)image.pgm < seeds_input_file.txt
 ``` 
-###### Test Folder :
-This folder contains .pgm images for testing (this program only works with images .pgm format)
+The `seeds_input_file.txt` should be used like below:
+```
+number_of_foreground_seeds number_of_background_seeds
+x y
+x y
+...
+```
 
+###### Test Folder :
+This folder contains .pgm images for testing (this program only works with images .pgm format [removing comments])
 
