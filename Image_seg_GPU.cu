@@ -268,7 +268,10 @@
      cudaEventCreate(&start_tempo_total);
      cudaEventCreate(&stop_tempo_total);
      float elapsed_time_total, elapsed_time_montagem_grafo, elapsed_time_caminhos_min, elapsed_time_montagem_imagem_seg;
-
+     
+     
+     
+     
      std::string path(argv[1]);
      std::string path_output(argv[2]);   
      imagem *img = read_pgm(path);

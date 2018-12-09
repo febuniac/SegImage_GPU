@@ -143,6 +143,7 @@ int main(int argc, char **argv) {
     std::string path(argv[1]);
     std::string path_output(argv[2]);
     imagem *img = read_pgm(path);
+    imagem *imagem_saida = new_image(img->rows, img->cols);
     
     int n_fg, n_bg;
     int x, y;
@@ -151,7 +152,9 @@ int main(int argc, char **argv) {
     cudaEventCreate(&stop);
     cudaEventCreate(&start_tempo_total);
     cudaEventCreate(&stop_tempo_total);
-    float elapsed_time_total, elapsed_time_montagem_grafo, elapsed_time_caminhos_min, elapsed_time_montagem_imagem_seg;
+    float elapsed_time_total, elapsed_time_caminhos_min, elapsed_time_montagem_imagem_seg;
+    
+    cudaEventRecord(start_tempo_total);
     
     dim3 dimGrid(ceil(img->rows/16.0), ceil(img->cols/16.0), 1);
     dim3 dimBlock(16, 16, 1);
@@ -159,21 +162,36 @@ int main(int argc, char **argv) {
     thrust::device_vector<unsigned char> saida_img(imagem_saida->pixels, imagem_saida->pixels + imagem_saida->total_size );
     edgeFilter<<<dimGrid,dimBlock>>>(thrust::raw_pointer_cast(entrada_img.data()), thrust::raw_pointer_cast(saida_img.data()),0, img->rows,0, img->cols);
     std::cin >> n_fg >> n_bg;
-    assert(n_fg == 1);
-    assert(n_bg == 1);
+    std::vector<int> seeds_bg;
+    std::vector<int> seeds_fg;
+
+ 
+    for(int i = 0; i < n_bg; i++){
+        std::cin >> x >> y;
+        int seed_bg = y * img->cols + x;
+        seeds_bg.push_back(seed_bg);
+    }
+    for(int i = 0; i < n_fg; i++){
+        std::cin >> x >> y;
+        int seed_fg = y * img->cols + x;
+        seeds_fg.push_back(seed_fg);
+    }
     
-    std::cin >> x >> y;
-    int seed_fg = y * img->cols + x;
+    // std::cin >> x >> y;
+    // int seed_fg = y * img->cols + x;
     
-    std::cin >> x >> y;
-    int seed_bg = y * img->cols + x;
-    
-    
-    result_sssp fg = SSSP(img, seed_fg);
-    result_sssp bg = SSSP(img, seed_bg);
-    
+    // std::cin >> x >> y;
+    // int seed_bg = y * img->cols + x;
+
+    cudaEventRecord(start);
+    result_sssp fg = SSSP(img, seeds_fg);
+    result_sssp bg = SSSP(img, seeds_bg);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&elapsed_time_caminhos_min, start, stop);
     imagem *saida = new_image(img->rows, img->cols);
-    
+
+    cudaEventRecord(start);
     for (int k = 0; k < saida->total_size; k++) {
         if (fg.first[k] > bg.first[k]) {
             saida->pixels[k] = 0;
@@ -181,7 +199,21 @@ int main(int argc, char **argv) {
             saida->pixels[k] = 255;
         }
     }
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&elapsed_time_montagem_imagem_seg, start, stop);
     
-    write_pgm(saida, path_output);    
+    write_pgm(saida, path_output); 
+
+    cudaEventRecord(stop_tempo_total);
+    cudaEventSynchronize(stop_tempo_total);
+    cudaEventElapsedTime(&elapsed_time_total, start, stop);
+
+
+    std::cout <<"Tempo total de execução foi:" << elapsed_time_total << std::endl;
+    std::cout <<  "Tempo de cálculo de caminhos mínimos foi:" << elapsed_time_caminhos_min << std::endl;
+    std::cout << "Tempo de montagem da imagem segmentada foi:" << elapsed_time_montagem_imagem_seg << std::endl;
+ 
     return 0;
 }
+
