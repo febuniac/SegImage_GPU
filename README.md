@@ -45,6 +45,6 @@ x y
 ...
 ```
 
-###### Test Folder :
+###### Test Material :
 This folder contains .pgm images for testing (this program only works with images .pgm format [removing comments])
 
