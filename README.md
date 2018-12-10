@@ -46,5 +46,5 @@ x y
 ```
 
 ###### Test Material :
-This folder contains .pgm images for testing (this program only works with images .pgm format [removing comments])
+This folder contains .pgm images for testing (this program only works with images .pgm format [removing comments]), some exampole input files and some results examples.
 
