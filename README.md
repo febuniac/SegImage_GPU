@@ -16,7 +16,7 @@ Use this program with a computer that has a GPU from NVIDIA.
 ```
 ###### Step 3 :
 ```
-Use the command 'make' on this repository's folder (this will compile it with the correct flags)
+Use the command 'make' on this repository's Source Code folder (this will compile it with the correct flags)
 ```
 ###### Step 4 :
 ```
@@ -47,4 +47,7 @@ x y
 
 ###### Test Material :
 This folder contains .pgm images for testing (this program only works with images .pgm format [removing comments]), some exampole input files and some results examples.
+
+###### Paper :
+This Folder has the paper with some analysis (the analysis were made on top of an error on the edge filter code. After some changes the timing of the GPU program were way better)
 
