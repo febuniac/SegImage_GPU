@@ -37,27 +37,24 @@
     int i=blockIdx.x * blockDim.x + threadIdx.x;
     int j=blockIdx.y * blockDim.y + threadIdx.y;
     
-    for(i = rowStart; i < rowEnd; ++i) 
+    if (i< rowEnd && j< colEnd) 
     {
-       for(j = colStart; j < colEnd; ++j) 
-       {
-          int min = 256;
-          int max = 0;
-         for(di = MAX(rowStart, i - 1); di <= MIN(i + 1, rowEnd - 1); di++) 
-         {
-             for(dj = MAX(colStart, j - 1); dj <= MIN(j + 1, colEnd - 1); dj++) 
-             {
+        int min = 256;
+        int max = 0;
+            for(di = MAX(rowStart, i - 1); di <= MIN(i + 1, rowEnd - 1); di++) 
+            {
+                for(dj = MAX(colStart, j - 1); dj <= MIN(j + 1, colEnd - 1); dj++) 
+                {
                 if(min>image_in[di*(colEnd-colStart)+dj]) min = image_in[di*(colEnd-colStart)+dj];
                 if(max<image_in[di*(colEnd-colStart)+dj]) max = image_in[di*(colEnd-colStart)+dj]; 
-             }
-         }
-         image_out[i*(colEnd-colStart)+j] = max-min;
-       }
-     }
+                }
+            }
+            image_out[i*(colEnd-colStart)+j] = max-min;
+    }
  }
  
  
-  
+
  
  //Informações necessárias para gerar as listas e usar no SSSP
  struct info_lists{
