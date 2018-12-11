@@ -35,7 +35,7 @@ nvcc -O2 Image_seg_GPU.cu imagem.cpp -o NAME  --std=c++11 -lnvgraph (for GPU)
 ```
 After comopiling either ways. You are ready to use it!
 Using : 
-./NAME iumput_image.pgm Output_)image.pgm < seeds_input_file.txt
+./NAME input_image.pgm output_image.pgm < seeds_input_file.txt
 ``` 
 The `seeds_input_file.txt` should be used like below:
 ```
@@ -46,5 +46,5 @@ x y
 ```
 
 ###### Test Material :
-This folder contains .pgm images for testing (this program only works with images .pgm format [removing comments])
+This folder contains .pgm images for testing (this program only works with images .pgm format [removing comments]), some exampole input files and some results examples.
 
